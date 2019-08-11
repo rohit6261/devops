@@ -3,7 +3,7 @@ node {
 		BRANCH_NAME = "${env.BRANCH_NAME}"
         if("${BRANCH_NAME}" =~ "master") {
 
-    stage ('Collect Build Aritifacts') {
+    stage ('Fetch version details of nexus & package.json') {
 		def path = env.JOB_NAME.split('/')
 		def pathlength = path.length
 		def jobName = path[pathlength-1]
@@ -13,11 +13,10 @@ node {
     sh "curl -o version-checker.json -X GET -H 'Authorization:Basic YWRtaW46U2FwaWVudCMxMjM=' https://nexus.in.pscloudhub.com/service/rest/v1/search?repository=npm-ps"
 	NEXUS_VERSION = sh(script: 'echo $(cat version-checker.json | jq --arg JOB $JOB -r ".items[] | select(.name | contains (\\"$JOB\\"))? | .version")', returnStdout: true,).trim()
 	sh "echo 'The version uploaded on nexus is ${NEXUS_VERSION }'"
-	sh "cp /var/lib/jenkins/workspace/package.json ."
 	PACKAGE_VERSION = sh(script: 'echo $(cat package.json  | grep version  | head -1  | awk -F: \'{ print $2 }\'  | sed \'s/[",]//g\')', returnStdout: true,).trim()
 	sh "echo 'The version needs to be uploaded is ${PACKAGE_VERSION }'"
 			}
-    stage ('Check version') {
+    stage ('Compare version') {
     	def availVersion = "$PACKAGE_VERSION"
         def nexusVersion   = "$NEXUS_VERSION"
         def availTokens = availVersion.split('\\.')
@@ -30,11 +29,11 @@ node {
     def nexusItem    = ((i <= nexusSize)  ? nexusTokens[i - 1]   : 0)
     print "Avail: ${availItem} -> nexus: ${nexusItem}\n"
     if ((nexusItem > availItem) || ( (i == maxSize) && (nexusItem >= availItem) )) {
-        print "Npm publish is needed.\n"
+        print "Npm publish is not needed.\n"
         return
        }
    }
-   print "Npm publish is not needed!\n"
+   print "Npm publish is needed!\n"
     }
 }
 else {
