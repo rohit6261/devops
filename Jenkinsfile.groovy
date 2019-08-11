@@ -1,7 +1,7 @@
 node {
     try {
 		BRANCH_NAME = "${env.BRANCH_NAME}"
-        if("${BRANCH_NAME}" =~ "master/") {
+        if("${BRANCH_NAME}" =~ "master") {
 
     stage ('Collect Build Aritifacts') {
 		def path = env.JOB_NAME.split('/')
