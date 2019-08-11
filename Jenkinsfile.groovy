@@ -57,6 +57,7 @@ node {
        }
    }
    print "Npm publish is needed!\n"
+	    sh "npm publish"
     }
 }
 else {
