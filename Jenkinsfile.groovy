@@ -2,6 +2,29 @@ node {
     try {
 		BRANCH_NAME = "${env.BRANCH_NAME}"
         if("${BRANCH_NAME}" =~ "master") {
+   			stage('Checkout-Code') { // for display purposes
+				checkout(
+	[
+					$class: 'GitSCM', 
+					branches: [
+						[name: '*/${BRANCH_NAME}']
+					], 
+					doGenerateSubmoduleConfigurations: false, 
+					extensions: [
+						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
+						[$class: 'CheckoutOption', timeout: 40]
+					], 
+					gitTool: 'Default', 
+					submoduleCfg: [], 
+					userRemoteConfigs: [
+						[
+							credentialsId: 'rohit', 
+							url: 'https://github.com/rohit6261/test12.git',
+							changelog: true
+						]
+					]
+				])
+			}
 
     stage ('Fetch version details of nexus & package.json') {
 		def path = env.JOB_NAME.split('/')
