@@ -10,7 +10,7 @@ node {
 		JOB = jobName.toString()
 		env.JOB = JOB
 		sh "echo $JOB"
-    sh "curl -o version-checker.json -X GET -u admin:Sapient#123 https://nexus.in.pscloudhub.com/service/rest/v1/search?repository=npm-ps"
+    sh "curl -o version-checker.json -X GET -H 'Authorization:Basic YWRtaW46U2FwaWVudCMxMjM=' https://nexus.in.pscloudhub.com/service/rest/v1/search?repository=npm-ps"
 	NEXUS_VERSION = sh(script: 'echo $(cat version-checker.json | jq --arg JOB $JOB -r ".items[] | select(.name | contains (\\"$JOB\\"))? | .version")', returnStdout: true,).trim()
 	sh "echo 'The version uploaded on nexus is ${NEXUS_VERSION }'"
 	sh "cp /var/lib/jenkins/workspace/package.json ."
@@ -30,11 +30,11 @@ node {
     def nexusItem    = ((i <= nexusSize)  ? nexusTokens[i - 1]   : 0)
     print "Avail: ${availItem} -> nexus: ${nexusItem}\n"
     if ((nexusItem > availItem) || ( (i == maxSize) && (nexusItem >= availItem) )) {
-        print "Npm publish is not needed.\n"
+        print "Npm publish is needed.\n"
         return
        }
    }
-   print "Npm publish is needed!\n"
+   print "Npm publish is not needed!\n"
     }
 }
 else {
