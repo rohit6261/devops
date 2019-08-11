@@ -30,11 +30,11 @@ node {
     def nexusItem    = ((i <= nexusSize)  ? nexusTokens[i - 1]   : 0)
     print "Avail: ${availItem} -> nexus: ${nexusItem}\n"
     if ((nexusItem > availItem) || ( (i == maxSize) && (nexusItem >= availItem) )) {
-        print "Npm publish is needed.\n"
+        print "Npm publish is not needed.\n"
         return
        }
    }
-   print "Npm publish is not needed!\n"
+   print "Npm publish is needed!\n"
     }
 }
 else {
