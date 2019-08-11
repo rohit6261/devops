@@ -33,7 +33,8 @@ node {
 		JOB = jobName.toString()
 		env.JOB = JOB
 		sh "echo $JOB"
-    sh "curl -o version-checker.json -X GET -H 'Authorization:Basic YWRtaW46U2FwaWVudCMxMjM=' https://nexus.in.pscloudhub.com/service/rest/v1/search?repository=npm-ps"
+	// Use nexus rest api to get uploaded version details
+        sh "curl -o version-checker.json -X GET -H 'Authorization:Basic YWRtaW46U2FwaWVudCMxMjM=' https://nexus.in.pscloudhub.com/service/rest/v1/search?repository=npm-ps"
 	NEXUS_VERSION = sh(script: 'echo $(cat version-checker.json | jq --arg JOB $JOB -r ".items[] | select(.name | contains (\\"$JOB\\"))? | .version")', returnStdout: true,).trim()
 	sh "echo 'The version uploaded on nexus is ${NEXUS_VERSION }'"
 	PACKAGE_VERSION = sh(script: 'echo $(cat package.json  | grep version  | head -1  | awk -F: \'{ print $2 }\'  | sed \'s/[",]//g\')', returnStdout: true,).trim()
