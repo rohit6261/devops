@@ -36,30 +36,19 @@ node {
 					extensions: [
 						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
 						[$class: 'CheckoutOption', timeout: 40], 
-						[$class: 'DisablePoll'],
-						[$class: 'RelativeTargetDirectory', relativeTargetDir: 'dockerfiles']
 					], 
 					gitTool: 'Default', 
 					submoduleCfg: [], 
 					userRemoteConfigs: [
 						[
 							credentialsId: 'github', 
-							url: 'https://github.com/rohit6261/test12.git'
+							url: 'https://github.com/rohit6261/devops.git'
 						]
 					]
 				])
 			}
 			stage('npm install') {
 				sh "npm install"
-			}
-
-			stage('Build') {
-				sh "cd ${WORKSPACE}"
-				sh "npm run build:prod"
-			}
-			stage('Component Build') {
-				sh "cd ${WORKSPACE}"
-				sh "npm run build:Components"
 			}
 
 		stage ('Collect Build Aritifacts') {
