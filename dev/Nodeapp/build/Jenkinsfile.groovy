@@ -59,7 +59,7 @@ node {
 			}
 			
 			stage('Get docker files') {
-				sh "cp devops/Nodeapp/docker/* ."
+				sh "cp dev/Nodeapp/docker/* ."
 			}
 			stage('Create-Docker-Images') {
 				echo "Starting to create docker images of all tools and pushing to Google cloud Repo"
