@@ -2,29 +2,6 @@ node {
   try {
 	timestamps {
 			notifyBuild('STARTED')
-			stage('Checkout-Code') { // for display purposes
-				checkout(
-				[
-					$class: 'GitSCM', 
-					branches: [
-						[name: '*/${BRANCH_NAME}']
-					], 
-					doGenerateSubmoduleConfigurations: false, 
-					extensions: [
-						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
-						[$class: 'CheckoutOption', timeout: 40]
-					], 
-					gitTool: 'Default', 
-					submoduleCfg: [], 
-					userRemoteConfigs: [
-						[
-							credentialsId: 'github', 
-							url: 'https://github.com/rohit6261/NodeApp.git',
-							changelog: true
-						]
-					]
-				])
-			}
 			stage('Checkout-Devopscode') { // for display purposes
 				checkout(
 				[
@@ -47,6 +24,32 @@ node {
 					]
 				])
 			}
+						stage('Checkout-Code') { // for display purposes
+				checkout(
+				[
+					$class: 'GitSCM', 
+					branches: [
+						[name: '*/${BRANCH_NAME}']
+					], 
+					doGenerateSubmoduleConfigurations: false, 
+					extensions: [
+						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
+						[$class: 'CheckoutOption', timeout: 40]
+					], 
+					gitTool: 'Default', 
+					submoduleCfg: [], 
+					userRemoteConfigs: [
+						[
+							credentialsId: 'github', 
+							url: 'https://github.com/rohit6261/NodeApp.git',
+							changelog: true
+						]
+					]
+				])
+			}
+			
+			
+			
 			stage('npm install') {
 				sh "npm install"
 			}
@@ -62,11 +65,12 @@ node {
 				sh "cp dev/Nodeapp/docker/* ."
 			}
 			stage('Create-Docker-Images') {
+			    NEW_BRANCH_NAME = sh(returnStdout: true, script: 'echo ${BRANCH_NAME} | sed -e \'s/\\//-/g\'').trim()
 				echo "Starting to create docker images of all tools and pushing to Google cloud Repo"
 				SHA = sh(returnStdout: true, script: "git log -n 1 --format=format:%H").trim()
 				GITREPO = sh(script: 'echo $(git remote -v | awk \'{print $2}\' | tail -1)',returnStdout: true,)
 				
-				def customImage = docker.build("us.gcr.io/strong-land-247018/docker-images-${JOB}:${NEW_BRANCH_NAME}-${BUILD_NUMBER}", "--build-arg 'build_number=${NEW_BRANCH_NAME}-${BUILD_NUMBER}' --build-arg --label 'branch=${BRANCH_NAME}' --label 'sha=${SHA}' --label 'gitrepo=${GITREPO}' --no-cache=true --force-rm .")
+				def customImage = docker.build("us.gcr.io/strong-land-247018/docker-image-${JOB}:${NEW_BRANCH_NAME}-${BUILD_NUMBER}", "--build-arg 'build_number=${NEW_BRANCH_NAME}-${BUILD_NUMBER}' --label 'branch=${NEW_BRANCH_NAME}' --label 'sha=${SHA}' --label 'gitrepo=${GITREPO}' --no-cache=true --force-rm --file Dockerfile .")
 				
 				customImage.push()
 				
