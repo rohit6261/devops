@@ -36,15 +36,13 @@ node {
 					extensions: [
 						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
 						[$class: 'CheckoutOption', timeout: 40], 
-						[$class: 'DisablePoll'],
-						[$class: 'RelativeTargetDirectory', relativeTargetDir: 'dockerfiles']
 					], 
 					gitTool: 'Default', 
 					submoduleCfg: [], 
 					userRemoteConfigs: [
 						[
 							credentialsId: 'github', 
-							url: 'https://github.com/rohit6261/test12.git'
+							url: 'https://github.com/rohit6261/devops.git'
 						]
 					]
 				])
@@ -130,9 +128,9 @@ def notifyBuild(String buildStatus = 'STARTED') {
   } else {
     color = 'RED'
     colorCode = '#FF0000'
-	emailext attachLog: true, body: "${body}", mimeType: "text/html", compressLog: true, recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider'], [$class: 'FailingTestSuspectsRecipientProvider'], [$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: "${subject}", to: "rohitsnjob@gmail.com"
+//	emailext attachLog: true, body: "${body}", mimeType: "text/html", compressLog: true, recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider'], [$class: 'FailingTestSuspectsRecipientProvider'], [$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: "${subject}", to: "rohitsnjob@gmail.com"
   }
 
   // Send notifications
-  slackSend (color: colorCode, message: summary)
+ // slackSend (color: colorCode, message: summary)
 }
