@@ -2,29 +2,7 @@ node {
   try {
 	timestamps {
 			notifyBuild('STARTED')
-			stage('Checkout-Devopscode') { // for display purposes
-				checkout(
-				[
-					$class: 'GitSCM', 
-					branches: [
-						[name: '*/master']
-					], 
-					doGenerateSubmoduleConfigurations: false, 
-					extensions: [
-						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
-						[$class: 'CheckoutOption', timeout: 40], 
-					], 
-					gitTool: 'Default', 
-					submoduleCfg: [], 
-					userRemoteConfigs: [
-						[
-							credentialsId: 'github', 
-							url: 'https://github.com/rohit6261/devops.git'
-						]
-					]
-				])
-			}
-						stage('Checkout-Code') { // for display purposes
+				stage('Checkout-Code') { // for display purposes
 				checkout(
 				[
 					$class: 'GitSCM', 
@@ -46,10 +24,30 @@ node {
 						]
 					]
 				])
-			}
-			
-			
-			
+			}	
+		stage('Checkout-Devopscode') { // for display purposes
+				checkout(
+				[
+					$class: 'GitSCM', 
+					branches: [
+						[name: '*/master']
+					], 
+					doGenerateSubmoduleConfigurations: false, 
+					extensions: [
+						[$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false, timeout: 40], 
+						[$class: 'CheckoutOption', timeout: 40], 
+					       [$class: 'RelativeTargetDirectory', relativeTargetDir: 'devops']
+					], 
+					gitTool: 'Default', 
+					submoduleCfg: [], 
+					userRemoteConfigs: [
+						[
+							credentialsId: 'github', 
+							url: 'https://github.com/rohit6261/devops.git'
+						]
+					]
+				])
+			}	
 			stage('npm install') {
 				sh "npm install"
 			}
@@ -62,7 +60,7 @@ node {
 			}
 			
 			stage('Get docker files') {
-				sh "cp dev/Nodeapp/docker/* ."
+				sh "cp devops/dev/Nodeapp/docker/* ."
 			}
 			stage('Create-Docker-Images') {
 			    NEW_BRANCH_NAME = sh(returnStdout: true, script: 'echo ${BRANCH_NAME} | sed -e \'s/\\//-/g\'').trim()
