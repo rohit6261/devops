@@ -119,9 +119,9 @@ def notifyBuild(String buildStatus = 'STARTED') {
   } else {
     color = 'RED'
     colorCode = '#FF0000'
-	emailext attachLog: true, body: "${body}", mimeType: "text/html", compressLog: true, recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider'], [$class: 'FailingTestSuspectsRecipientProvider'], [$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: "${subject}", to: "rohitsnjob@gmail.com"
+	//emailext attachLog: true, body: "${body}", mimeType: "text/html", compressLog: true, recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider'], [$class: 'FailingTestSuspectsRecipientProvider'], [$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: "${subject}", to: "rohitsnjob@gmail.com"
   }
 
   // Send notifications
-  slackSend (color: colorCode, message: summary)
+ // slackSend (color: colorCode, message: summary)
 }
