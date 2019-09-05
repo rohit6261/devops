@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ms-configs
+  namespace: live
+data:
+  xt_site_concepts: "US,Canada"
