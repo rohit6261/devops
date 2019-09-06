@@ -68,7 +68,7 @@ node {
 				SHA = sh(returnStdout: true, script: "git log -n 1 --format=format:%H").trim()
 				GITREPO = sh(script: 'echo $(git remote -v | awk \'{print $2}\' | tail -1)',returnStdout: true,)
 				
-				def customImage = docker.build("us.gcr.io/strong-land-247018/docker-image-${JOB}:${NEW_BRANCH_NAME}-${BUILD_NUMBER}", "--build-arg 'build_number=${NEW_BRANCH_NAME}-${BUILD_NUMBER}' --label 'branch=${NEW_BRANCH_NAME}' --label 'sha=${SHA}' --label 'gitrepo=${GITREPO}' --no-cache=true --force-rm --file Dockerfile .")
+				def customImage = docker.build("us.gcr.io/strong-land-247018/docker-images-${JOB}:${NEW_BRANCH_NAME}-${BUILD_NUMBER}", "--build-arg 'build_number=${NEW_BRANCH_NAME}-${BUILD_NUMBER}' --label 'branch=${NEW_BRANCH_NAME}' --label 'sha=${SHA}' --label 'gitrepo=${GITREPO}' --no-cache=true --force-rm --file Dockerfile .")
 				
 				customImage.push()
 				
